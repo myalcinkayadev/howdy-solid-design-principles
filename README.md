@@ -99,3 +99,59 @@ So you have some common operations.
 Now, the problem with all of this is that imagine that a Journal isn't the only object in your system.
 Imagine that you have 10 different types that you want to serialize to files and load from files and maybe load from some. You are write somewhere.
 **How can you have common operations on all of these? And the answer is, well, it's going to be very difficult for you.**
+
+
+So it might make sense to take all of these operations related to persistence, because that's what it is.
+You might want to take all of them, remove them from this class and just add them to a separate component that can subsequently be generalized for handling different types of objects, not just journal entries, but other things as well.
+
+So a good idea would be to take everything from here and just make a separate class, make a class that's called persistance manager.
+
+```javascript
+  const fs = require("fs");
+
+  class Journal {
+    constructor() {
+      this.entries = {};
+      this.count = 0;
+    }
+
+    addEntry(text) {
+      let c = ++this.count;
+      let entry = `${c}: ${text}`;
+      this.entries[c] = entry;
+      return c;
+    }
+
+    removeEntry(index) {
+      delete this.entries[index];
+    }
+
+    toString() {
+      return Object.values(this.entries).join("\n");
+    }
+  }
+
+  class PersistenceManager {
+    preprocess(journal) {
+      //
+    }
+
+    saveToFile(journal, filename) {
+      fs.writeFileSync(filename, journal.toString());
+    }
+  }
+
+  let j = new Journal();
+  j.addEntry("I listened The Old Man's Back Again today");
+  j.addEntry(
+    "I realized that I love the metaphors Shawn James uses in his songs"
+  );
+  console.log(j.toString());
+
+  let p = new PersistenceManager();
+  const now = new Date();
+  let fileName = `journal-${now.getFullYear()}-${(now.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${now.getDate()}.txt`;
+  p.saveToFile(j, fileName);
+```
