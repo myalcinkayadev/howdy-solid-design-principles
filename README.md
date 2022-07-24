@@ -104,7 +104,11 @@ Imagine that you have 10 different types that you want to serialize to files and
 So it might make sense to take all of these operations related to persistence, because that's what it is.
 You might want to take all of them, remove them from this class and just add them to a separate component that can subsequently be generalized for handling different types of objects, not just journal entries, but other things as well.
 
-So a good idea would be to take everything from here and just make a separate class, make a class that's called persistance manager.
+**So a good idea would be to take everything from here and just make a separate class, make a class that's called persistance manager.**
+
+So you keep everything right where you persistance functionality is and it's better for organization and better for understanding what the code actually does and where the modifications need to happen.
+So you know that if your files aren't being saved correctly, you're not going to be looking in like 10 different places.
+You're going to be looking inside the persistance manager.
 
 ```javascript
   const fs = require("fs");
